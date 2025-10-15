@@ -3,32 +3,30 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ระบบสต๊อกอุปกรณ์</title>
+<title>ระบบสต๊อกอุปกรณ์ (มือถือ)</title>
 <script src="https://unpkg.com/html5-qrcode"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Prompt&display=swap');
-body { font-family:"Prompt",sans-serif; background:#f4f6f9; margin:10px; }
-.container { max-width:1200px; margin:auto; background:#fff; padding:20px; border-radius:15px; box-shadow:0 2px 10px rgba(0,0,0,0.1); }
-h1 { text-align:center; color:#333; font-size:26px; }
-.btn { padding:10px 16px; border:none; background:#1976d2; color:#fff; border-radius:6px; cursor:pointer; margin:5px; font-size:14px;}
+
+body { font-family:"Prompt",sans-serif; background:#f4f6f9; margin:5px; }
+.container { max-width:100%; margin:auto; background:#fff; padding:15px; border-radius:12px; box-shadow:0 2px 10px rgba(0,0,0,0.1); }
+h1 { text-align:center; color:#333; font-size:22px; margin-bottom:10px; }
+
+.btn { padding:10px 12px; border:none; background:#1976d2; color:#fff; border-radius:50px; cursor:pointer; margin:3px; font-size:14px; display:inline-block; min-width:50px; }
 .btn:hover { background:#125aa0; }
 
-table { width:100%; border-collapse:collapse; margin-top:15px; font-size:14px; }
-th, td { border:1px solid #ccc; padding:6px; text-align:center; font-size:14px; }
+table { width:100%; border-collapse:collapse; margin-top:10px; font-size:14px; }
+th, td { border:1px solid #ccc; padding:6px; text-align:center; font-size:13px; }
 th { background:#1976d2; color:white; font-size:14px; }
 
 input[type="text"], input[type="number"], select {
-  width:100%; 
-  text-align:center;
-  font-size:14px;
-  padding:4px;
-  box-sizing:border-box;
+  width:100%; text-align:center; font-size:13px; padding:3px; box-sizing:border-box;
 }
 
 .low { background:#ffcccc; }
 
-#reader { width:100%; max-width:400px; margin:20px auto; display:none; }
+#reader { width:100%; margin:10px auto; display:none; }
 
 @media print {
   body * { visibility:hidden; }
@@ -40,14 +38,15 @@ input[type="text"], input[type="number"], select {
 
 <body>
 <div class="container">
-<h1>📦 ระบบสต๊อกอุปกรณ์ทั่วไป</h1>
+<h1>📦 ระบบสต๊อกอุปกรณ์มือถือ</h1>
 
 <div style="text-align:center;">
-  <button class="btn" onclick="window.location.href='index.html'">🏠 กลับหน้าหลัก</button>
-  <button class="btn" id="start-scan">📸 สแกน QR</button>
-  <button class="btn" id="addItemBtn">➕ เพิ่มอุปกรณ์</button>
-  <button class="btn" id="export">📁 บันทึก Excel</button>
-  <button class="btn" id="printBtn">🖨️ พิมพ์รายงาน</button>
+  <button class="btn" onclick="window.location.href='index.html'">🏠</button>
+  <button class="btn" id="start-scan">📸</button>
+  <button class="btn" id="addItemBtn">➕</button>
+  <button class="btn" id="saveBtn">💾</button>
+  <button class="btn" id="export">📁</button>
+  <button class="btn" id="printBtn">🖨️</button>
 </div>
 
 <div id="reader"></div>
@@ -71,7 +70,7 @@ input[type="text"], input[type="number"], select {
 </div>
 
 <div id="printArea" style="display:none;">
-<h2 style="text-align:center;">รายงานสต๊อกอุปกรณ์ทั่วไป</h2>
+<h2 style="text-align:center;">รายงานสต๊อกอุปกรณ์</h2>
 <table style="width:100%; border-collapse:collapse;">
   <thead>
     <tr>
@@ -100,90 +99,64 @@ function saveItems() {
 function renderTable() {
   const tbody = document.querySelector("#stockTable tbody");
   tbody.innerHTML = "";
-  items.forEach((item, index) => {
-    const inQty = parseInt(item.inQty) || 0;
-    const outQty = parseInt(item.outQty) || 0;
+  items.forEach((item,index)=>{
+    const inQty = parseInt(item.inQty)||0;
+    const outQty = parseInt(item.outQty)||0;
     const remain = inQty - outQty;
-    const order = remain <= 10 ? "ต้องสั่งเพิ่ม" : "";
-    const rowClass = remain <= 10 ? "low" : "";
+    const order = remain<=10?"ต้องสั่งเพิ่ม":"";
+    const rowClass = remain<=10?"low":"";
     const row = document.createElement("tr");
     row.className = rowClass;
 
-    let unitOptions = units.map(u => `<option value="${u}" ${u===item.unit?'selected':''}>${u}</option>`).join("");
+    let unitOptions = units.map(u=>`<option value="${u}" ${u===item.unit?'selected':''}>${u}</option>`).join("");
 
-    row.innerHTML = `
-      <td>${index + 1}</td>
+    row.innerHTML=`
+      <td>${index+1}</td>
       <td>${item.date}</td>
-      <td><input type="text" value="${item.name}" onchange="updateItem(${index}, 'name', this.value)"></td>
-      <td><input type="number" value="${item.inQty}" onchange="updateItem(${index}, 'inQty', this.value)"></td>
-      <td><input type="number" value="${item.outQty}" onchange="updateItem(${index}, 'outQty', this.value)"></td>
+      <td><input type="text" value="${item.name}" onchange="updateItem(${index},'name',this.value)"></td>
+      <td><input type="number" value="${item.inQty}" onchange="updateItem(${index},'inQty',this.value)"></td>
+      <td><input type="number" value="${item.outQty}" onchange="updateItem(${index},'outQty',this.value)"></td>
       <td>${remain}</td>
-      <td>
-        <select onchange="updateItem(${index}, 'unit', this.value)">
-          ${unitOptions}
-        </select>
-      </td>
+      <td><select onchange="updateItem(${index},'unit',this.value)">${unitOptions}</select></td>
       <td>${order}</td>
-      <td><button class="btn" style="background:#e53935" onclick="deleteItem(${index})">ลบ</button></td>
+      <td><button class="btn" style="background:#e53935" onclick="deleteItem(${index})">❌</button></td>
     `;
     tbody.appendChild(row);
   });
 }
 
-function updateItem(index, key, value) {
-  items[index][key] = value;
-  saveItems();
-  renderTable();
-}
-
-function addItem() {
-  const name = prompt("ชื่ออุปกรณ์:");
-  if (!name) return;
-  const inQty = prompt("จำนวนเข้า:", "0");
-  const outQty = prompt("จ่ายออก:", "0");
-  const unit = prompt(`เลือกหน่วย: ${units.join(",")}`, units[0]);
+function updateItem(i,key,value){ items[i][key]=value; saveItems(); renderTable(); }
+function addItem(){
+  const name = prompt("ชื่ออุปกรณ์:"); if(!name) return;
+  const inQty = prompt("จำนวนเข้า:","0");
+  const outQty = prompt("จ่ายออก:","0");
+  const unit = prompt(`เลือกหน่วย: ${units.join(",")}`,units[0]);
   const date = new Date().toLocaleDateString("th-TH");
-  items.push({ date, name, inQty, outQty, unit });
-  saveItems();
-  renderTable();
+  items.push({date,name,inQty,outQty,unit});
+  saveItems(); renderTable();
 }
+function deleteItem(i){ if(confirm("ลบรายการนี้หรือไม่?")){ items.splice(i,1); saveItems(); renderTable(); } }
 
-function deleteItem(index) {
-  if (confirm("ลบรายการนี้หรือไม่?")) {
-    items.splice(index, 1);
-    saveItems();
-    renderTable();
-  }
-}
+document.getElementById("addItemBtn").addEventListener("click",addItem);
+document.getElementById("saveBtn").addEventListener("click",()=>{ saveItems(); alert("บันทึกเรียบร้อย!"); });
 
-document.getElementById("addItemBtn").addEventListener("click", addItem);
-
-document.getElementById("export").addEventListener("click", () => {
-  const ws = XLSX.utils.table_to_sheet(document.getElementById("stockTable"));
-  const wb = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb, ws, "Stock");
-  XLSX.writeFile(wb, "stock_items.xlsx");
+document.getElementById("export").addEventListener("click",()=>{
+  const ws=XLSX.utils.table_to_sheet(document.getElementById("stockTable"));
+  const wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,ws,"Stock");
+  XLSX.writeFile(wb,"stock_items.xlsx");
 });
 
-document.getElementById("printBtn").addEventListener("click", () => {
-  const printTbody = document.getElementById("printTable");
-  printTbody.innerHTML = "";
+document.getElementById("printBtn").addEventListener("click",()=>{
+  const printTbody=document.getElementById("printTable");
+  printTbody.innerHTML="";
   items.forEach((item,index)=>{
-    const inQty = parseInt(item.inQty)||0;
-    const outQty = parseInt(item.outQty)||0;
-    const remain = inQty - outQty;
-    const order = remain <=10 ? "ต้องสั่งเพิ่ม" : "";
-    const row = document.createElement("tr");
-    row.innerHTML = `
-      <td>${index+1}</td>
-      <td>${item.date}</td>
-      <td>${item.name}</td>
-      <td>${inQty}</td>
-      <td>${outQty}</td>
-      <td>${remain}</td>
-      <td>${item.unit||''}</td>
-      <td>${order}</td>
-    `;
+    const inQty=parseInt(item.inQty)||0;
+    const outQty=parseInt(item.outQty)||0;
+    const remain=inQty-outQty;
+    const order = remain<=10?"ต้องสั่งเพิ่ม":"";
+    const row=document.createElement("tr");
+    row.innerHTML=`<td>${index+1}</td><td>${item.date}</td><td>${item.name}</td><td>${inQty}</td><td>${outQty}</td><td>${remain}</td><td>${item.unit||''}</td><td>${order}</td>`;
     printTbody.appendChild(row);
   });
   document.getElementById("printArea").style.display="block";
@@ -191,41 +164,35 @@ document.getElementById("printBtn").addEventListener("click", () => {
   document.getElementById("printArea").style.display="none";
 });
 
-// ==== QR Code Scanner พร้อมตรวจสอบซ้ำ และเลือกหน่วย ====
-const html5QrCode = new Html5Qrcode("reader");
-document.getElementById("start-scan").addEventListener("click", () => {
-  document.getElementById("reader").style.display = "block";
+// QR Scanner
+const html5QrCode=new Html5Qrcode("reader");
+document.getElementById("start-scan").addEventListener("click",()=>{
+  document.getElementById("reader").style.display="block";
   Html5Qrcode.getCameras().then(cameras=>{
     if(cameras && cameras.length){
       html5QrCode.start(
         cameras[0].id,
-        { fps: 10, qrbox: 250 },
+        { fps:10, qrbox:250 },
         decodedText=>{
           const itemName = decodedText;
-          const existingIndex = items.findIndex(i => i.name === itemName);
+          const existingIndex = items.findIndex(i=>i.name===itemName);
           const date = new Date().toLocaleDateString("th-TH");
 
-          if(existingIndex >=0){
-            // ถ้าซ้ำ ให้แก้จำนวนเข้า / จ่ายออก / หน่วย
+          if(existingIndex>=0){
             const inQty = prompt(`อุปกรณ์ ${itemName} ซ้ำ! จำนวนเข้าเดิม: ${items[existingIndex].inQty} เพิ่มเป็น:`, items[existingIndex].inQty);
             const outQty = prompt(`จำนวนจ่ายออกเดิม: ${items[existingIndex].outQty} แก้เป็น:`, items[existingIndex].outQty);
             const unit = prompt(`เลือกหน่วย: ${units.join(",")}`, items[existingIndex].unit||units[0]);
-            items[existingIndex].inQty = inQty;
-            items[existingIndex].outQty = outQty;
-            items[existingIndex].unit = unit;
-            items[existingIndex].date = date;
-          } else {
-            const inQty = prompt("จำนวนเข้า:", "0");
-            const outQty = prompt("จ่ายออก:", "0");
-            const unit = prompt(`เลือกหน่วย: ${units.join(",")}`, units[0]);
-            items.push({ date, name:itemName, inQty, outQty, unit });
+            items[existingIndex].inQty=inQty; items[existingIndex].outQty=outQty; items[existingIndex].unit=unit; items[existingIndex].date=date;
+          }else{
+            const inQty=prompt("จำนวนเข้า:","0");
+            const outQty=prompt("จ่ายออก:","0");
+            const unit=prompt(`เลือกหน่วย: ${units.join(",")}`,units[0]);
+            items.push({date,name:itemName,inQty,outQty,unit});
           }
 
-          saveItems();
-          renderTable();
+          saveItems(); renderTable();
           alert("บันทึกอุปกรณ์: "+itemName);
-          html5QrCode.stop();
-          document.getElementById("reader").style.display="none";
+          html5QrCode.stop(); document.getElementById("reader").style.display="none";
         },
         errorMessage=>{}
       );
@@ -236,4 +203,4 @@ document.getElementById("start-scan").addEventListener("click", () => {
 renderTable();
 </script>
 </body>
-</html> 
+</html>
