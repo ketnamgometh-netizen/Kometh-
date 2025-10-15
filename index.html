@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>เมนูหลัก - ระบบสต็อก</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Prompt&display=swap');
+    body {
+      font-family: "Prompt", sans-serif;
+      background: linear-gradient(135deg, #1976d2, #42a5f5);
+      height: 100vh;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      color: white;
+      text-align: center;
+    }
+    h1 {
+      font-size: 36px;
+      margin-bottom: 30px;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+    }
+    .btn {
+      display: block;
+      width: 250px;
+      margin: 10px auto;
+      padding: 15px;
+      font-size: 20px;
+      border: none;
+      border-radius: 10px;
+      background: white;
+      color: #1976d2;
+      cursor: pointer;
+      transition: 0.3s;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+    .btn:hover {
+      background: #1565c0;
+      color: white;
+    }
+    @media (max-width: 768px) {
+      h1 { font-size: 28px; }
+      .btn {
+        width: 80%;
+        font-size: 18px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>📦 ระบบจัดการสต็อก</h1>
+
+  <button class="btn" onclick="window.location.href='stock.html'">🧰 สต็อกอุปกรณ์ทั่วไป</button>
+  <button class="btn" onclick="window.location.href='aluminium.html'">🪞 สต๊อกอลูมิเนียม</button>
+
+  <p style="margin-top:30px;font-size:14px;opacity:0.8;">ระบบสต็อกภายในองค์กร</p>
+</body>
+</html>
