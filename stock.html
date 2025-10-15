@@ -1,73 +1,79 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ระบบสต๊อกอุปกรณ์</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-  <style>
-  @import url('https://fonts.googleapis.com/css2?family=Prompt&display=swap');
-  body { font-family:"Prompt",sans-serif; background:#f4f6f9; margin:10px; }
-  .container { max-width:1200px; margin:auto; background:#fff; padding:20px; border-radius:15px; box-shadow:0 2px 10px rgba(0,0,0,0.1); }
-  h1 { text-align:center; color:#333; }
-  .btn { padding:10px 16px; border:none; background:#1976d2; color:#fff; border-radius:6px; cursor:pointer; margin:5px; }
-  .btn:hover { background:#125aa0; }
-  table { width:100%; border-collapse:collapse; margin-top:15px; }
-  th,td { border:1px solid #ccc; padding:8px; text-align:center; }
-  th { background:#1976d2; color:white; }
-  input[type="text"], input[type="number"] { width:100%; text-align:center; }
-  .low { background:#ffcccc; }
-  @media print {
-    body * { visibility:hidden; }
-    #printArea, #printArea * { visibility:visible; }
-    #printArea { position:absolute; left:0; top:0; width:100%; }
-  }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ระบบสต๊อกอุปกรณ์</title>
+<script src="https://unpkg.com/html5-qrcode"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Prompt&display=swap');
+body { font-family:"Prompt",sans-serif; background:#f4f6f9; margin:10px; }
+.container { max-width:1200px; margin:auto; background:#fff; padding:20px; border-radius:15px; box-shadow:0 2px 10px rgba(0,0,0,0.1); }
+h1 { text-align:center; color:#333; }
+.btn { padding:10px 16px; border:none; background:#1976d2; color:#fff; border-radius:6px; cursor:pointer; margin:5px; }
+.btn:hover { background:#125aa0; }
+table { width:100%; border-collapse:collapse; margin-top:15px; }
+th,td { border:1px solid #ccc; padding:8px; text-align:center; }
+th { background:#1976d2; color:white; }
+input[type="text"], input[type="number"] { width:100%; text-align:center; }
+.low { background:#ffcccc; }
+#reader { width:100%; max-width:400px; margin:20px auto; display:none; }
+@media print {
+  body * { visibility:hidden; }
+  #printArea, #printArea * { visibility:visible; }
+  #printArea { position:absolute; left:0; top:0; width:100%; }
+}
+</style>
 </head>
 
 <body>
-  <div class="container">
-    <h1>📦 ระบบสต๊อกอุปกรณ์ทั่วไป</h1>
-    <div style="text-align:center;">
-      <button class="btn" id="addItemBtn">➕ เพิ่มอุปกรณ์</button>
-      <button class="btn" id="export">📁 บันทึก Excel</button>
-      <button class="btn" id="printBtn">🖨️ พิมพ์รายงาน</button>
-    </div>
+<div class="container">
+<h1>📦 ระบบสต๊อกอุปกรณ์ทั่วไป</h1>
 
-    <table id="stockTable">
-      <thead>
-        <tr>
-          <th>ลำดับ</th>
-          <th>วันที่</th>
-          <th>ชื่ออุปกรณ์</th>
-          <th>จำนวนเข้า</th>
-          <th>จ่ายออก</th>
-          <th>คงเหลือ</th>
-          <th>สั่งเพิ่ม</th>
-          <th>จัดการ</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
-  </div>
+<div style="text-align:center;">
+  <button class="btn" id="start-scan">📸 สแกน QR</button>
+  <button class="btn" id="addItemBtn">➕ เพิ่มอุปกรณ์</button>
+  <button class="btn" id="export">📁 บันทึก Excel</button>
+  <button class="btn" id="printBtn">🖨️ พิมพ์รายงาน</button>
+</div>
 
-  <div id="printArea" style="display:none;">
-    <h2 style="text-align:center;">รายงานสต๊อกอุปกรณ์ทั่วไป</h2>
-    <table style="width:100%; border-collapse:collapse;">
-      <thead>
-        <tr>
-          <th>ลำดับ</th>
-          <th>วันที่</th>
-          <th>ชื่ออุปกรณ์</th>
-          <th>จำนวนเข้า</th>
-          <th>จ่ายออก</th>
-          <th>คงเหลือ</th>
-          <th>สั่งเพิ่ม</th>
-        </tr>
-      </thead>
-      <tbody id="printTable"></tbody>
-    </table>
-  </div>
+<div id="reader"></div>
+
+<table id="stockTable">
+  <thead>
+    <tr>
+      <th>ลำดับ</th>
+      <th>วันที่</th>
+      <th>ชื่ออุปกรณ์</th>
+      <th>จำนวนเข้า</th>
+      <th>จ่ายออก</th>
+      <th>คงเหลือ</th>
+      <th>สั่งเพิ่ม</th>
+      <th>จัดการ</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+</div>
+
+<div id="printArea" style="display:none;">
+<h2 style="text-align:center;">รายงานสต๊อกอุปกรณ์ทั่วไป</h2>
+<table style="width:100%; border-collapse:collapse;">
+  <thead>
+    <tr>
+      <th>ลำดับ</th>
+      <th>วันที่</th>
+      <th>ชื่ออุปกรณ์</th>
+      <th>จำนวนเข้า</th>
+      <th>จ่ายออก</th>
+      <th>คงเหลือ</th>
+      <th>สั่งเพิ่ม</th>
+    </tr>
+  </thead>
+  <tbody id="printTable"></tbody>
+</table>
+</div>
 
 <script>
 let items = JSON.parse(localStorage.getItem("stockItems")) || [];
@@ -138,14 +144,14 @@ document.getElementById("export").addEventListener("click", () => {
 document.getElementById("printBtn").addEventListener("click", () => {
   const printTbody = document.getElementById("printTable");
   printTbody.innerHTML = "";
-  items.forEach((item, index) => {
+  items.forEach((item,index)=>{
     const inQty = parseInt(item.inQty)||0;
     const outQty = parseInt(item.outQty)||0;
     const remain = inQty - outQty;
-    const order = remain <= 10 ? "ต้องสั่งเพิ่ม" : "";
+    const order = remain <=10 ? "ต้องสั่งเพิ่ม" : "";
     const row = document.createElement("tr");
     row.innerHTML = `
-      <td>${index + 1}</td>
+      <td>${index+1}</td>
       <td>${item.date}</td>
       <td>${item.name}</td>
       <td>${inQty}</td>
@@ -155,9 +161,38 @@ document.getElementById("printBtn").addEventListener("click", () => {
     `;
     printTbody.appendChild(row);
   });
-  document.getElementById("printArea").style.display = "block";
+  document.getElementById("printArea").style.display="block";
   window.print();
-  document.getElementById("printArea").style.display = "none";
+  document.getElementById("printArea").style.display="none";
+});
+
+// ==== QR Code Scanner ====
+const html5QrCode = new Html5Qrcode("reader");
+document.getElementById("start-scan").addEventListener("click", () => {
+  document.getElementById("reader").style.display = "block";
+  Html5Qrcode.getCameras().then(cameras=>{
+    if(cameras && cameras.length){
+      html5QrCode.start(
+        cameras[0].id,
+        { fps: 10, qrbox: 250 },
+        decodedText=>{
+          const itemName = decodedText;
+          const inQty = prompt("จำนวนเข้า:", "0");
+          const outQty = prompt("จ่ายออก:", "0");
+          const date = new Date().toLocaleDateString("th-TH");
+          items.push({ date, name:itemName, inQty, outQty });
+          saveItems();
+          renderTable();
+          alert("เพิ่มอุปกรณ์จาก QR: "+itemName);
+          html5QrCode.stop();
+          document.getElementById("reader").style.display="none";
+        },
+        errorMessage=>{
+          // console.log("Scan error:",errorMessage);
+        }
+      );
+    }
+  }).catch(err=>alert("ไม่สามารถเปิดกล้องได้: "+err));
 });
 
 renderTable();
