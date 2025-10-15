@@ -1,132 +1,165 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>เมนูหลัก - ระบบสต็อก</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@400;600&display=swap');
-    
-    body {
-      font-family: "Prompt", sans-serif;
-      background: linear-gradient(-45deg, #1976d2, #42a5f5, #64b5f6, #90caf9);
-      background-size: 400% 400%;
-      animation: gradientMove 10s ease infinite;
-      height: 100vh;
-      margin: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-      color: white;
-      text-align: center;
-      overflow: hidden;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>เมนูหลัก - ระบบสต๊อก</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Prompt:wght@400;600&display=swap');
+body {
+  font-family: "Prompt", sans-serif;
+  background: linear-gradient(-45deg, #1976d2, #42a5f5, #64b5f6, #90caf9);
+  background-size: 400% 400%;
+  animation: gradientMove 10s ease infinite;
+  height: 100vh;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  color: white;
+  text-align: center;
+  overflow: hidden;
+}
 
-    @keyframes gradientMove {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
+@keyframes gradientMove {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
 
-    h1 {
-      font-size: 40px;
-      margin-bottom: 40px;
-      text-shadow: 2px 2px 5px rgba(0,0,0,0.25);
-      animation: fadeInDown 1s ease;
-    }
+h1 {
+  font-size: 40px;
+  margin-bottom: 40px;
+  text-shadow: 2px 2px 5px rgba(0,0,0,0.25);
+  animation: fadeInDown 1s ease;
+}
 
-    @keyframes fadeInDown {
-      from { opacity: 0; transform: translateY(-20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
 
-    .btn {
-      display: block;
-      width: 280px;
-      margin: 15px auto;
-      padding: 18px;
-      font-size: 20px;
-      font-weight: 600;
-      border: none;
-      border-radius: 12px;
-      background: white;
-      color: #1976d2;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      box-shadow: 0 6px 15px rgba(0,0,0,0.2);
-      animation: fadeInUp 1.5s ease;
-    }
+.btn {
+  display: block;
+  width: 280px;
+  margin: 15px auto;
+  padding: 18px;
+  font-size: 20px;
+  font-weight: 600;
+  border: none;
+  border-radius: 12px;
+  background: white;
+  color: #1976d2;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+  animation: fadeInUp 1.5s ease;
+}
 
-    .btn:hover {
-      transform: translateY(-4px);
-      background: #1976d2;
-      color: #fff;
-      box-shadow: 0 10px 20px rgba(25,118,210,0.4);
-    }
+.btn:hover {
+  transform: translateY(-4px);
+  background: #1976d2;
+  color: #fff;
+  box-shadow: 0 10px 20px rgba(25,118,210,0.4);
+}
 
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
 
-    .footer {
-      position: absolute;
-      bottom: 15px;
-      font-size: 14px;
-      opacity: 0.8;
-      animation: fadeIn 2s ease;
-    }
+.footer {
+  position: absolute;
+  bottom: 15px;
+  font-size: 14px;
+  opacity: 0.8;
+  animation: fadeIn 2s ease;
+}
 
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
 
-    /* เอฟเฟกต์วงกลมเบลอ ๆ วิ่งพื้นหลัง */
-    .bg-circle {
-      position: absolute;
-      border-radius: 50%;
-      filter: blur(60px);
-      opacity: 0.5;
-      animation: float 10s ease-in-out infinite;
-    }
-    .circle1 {
-      width: 200px; height: 200px;
-      background: #ffffff33;
-      top: 10%; left: 15%;
-      animation-delay: 0s;
-    }
-    .circle2 {
-      width: 300px; height: 300px;
-      background: #90caf966;
-      bottom: 10%; right: 10%;
-      animation-delay: 3s;
-    }
+/* วงกลมเบลอพื้นหลัง */
+.bg-circle {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(60px);
+  opacity: 0.5;
+  animation: float 10s ease-in-out infinite;
+}
+.circle1 { width: 200px; height: 200px; background: #ffffff33; top: 10%; left: 15%; animation-delay: 0s; }
+.circle2 { width: 300px; height: 300px; background: #90caf966; bottom: 10%; right: 10%; animation-delay: 3s; }
+@keyframes float { 0%,100% { transform: translateY(0) translateX(0); } 50% { transform: translateY(-20px) translateX(15px); } }
 
-    @keyframes float {
-      0%, 100% { transform: translateY(0) translateX(0); }
-      50% { transform: translateY(-20px) translateX(15px); }
-    }
+/* ปุ่มมุมซ้ายบน แบบไอคอนวงกลม + tooltip */
+.icon-btn {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: white;
+  color: #1976d2;
+  border: none;
+  cursor: pointer;
+  font-size: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  transition: all 0.3s ease;
+}
 
-    @media (max-width: 768px) {
-      h1 { font-size: 30px; }
-      .btn { width: 80%; font-size: 18px; padding: 15px; }
-    }
-  </style>
+.icon-btn:hover {
+  background: #1976d2;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(25,118,210,0.4);
+}
+
+.icon-btn[data-tooltip]:hover::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  top: 60px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0,0,0,0.75);
+  color: #fff;
+  padding: 6px 10px;
+  border-radius: 6px;
+  white-space: nowrap;
+  font-size: 14px;
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* responsive */
+@media (max-width: 768px) {
+  h1 { font-size: 30px; }
+  .btn { width: 80%; font-size: 18px; padding: 15px; }
+  .icon-btn { width: 45px; height: 45px; font-size: 20px; top: 15px; left: 15px; }
+}
+</style>
 </head>
 <body>
-  <!-- วงกลมเบลอเคลื่อนไหวพื้นหลัง -->
-  <div class="bg-circle circle1"></div>
-  <div class="bg-circle circle2"></div>
+<!-- วงกลมเบลอพื้นหลัง -->
+<div class="bg-circle circle1"></div>
+<div class="bg-circle circle2"></div>
 
-  <h1>📦 ระบบจัดการสต๊อก</h1>
+<!-- ปุ่มไอคอนมุมซ้ายบน -->
+<button class="icon-btn" onclick="window.location.href='search.html'" data-tooltip="ค้นหา / กรอง">🔍</button>
+<button class="icon-btn" onclick="window.location.href='profile.html'" style="top:80px;" data-tooltip="หน้าโปรไฟล์">👤</button>
 
-  <button class="btn" onclick="window.location.href='stock.html'">🧰 สต๊อกอุปกรณ์ทั่วไป</button>
-  <button class="btn" onclick="window.location.href='aluminium.html'">🪞 สต๊อกอลูมิเนียม</button>
-  <button class="btn" onclick="window.location.href='search.html'">🔍 ค้นหา / กรองอุปกรณ์</button>
-  <button class="btn" onclick="window.location.href='history.html'">📝 ประวัติการเข้า-ออก</button>
+<h1>📦 ระบบจัดการสต๊อก</h1>
 
-  <div class="footer">© 2025 Komet ระบบสต๊อกภายในองค์กร</div>
+<!-- ปุ่มสต๊อกตรงกลาง -->
+<button class="btn" onclick="window.location.href='stock.html'">🧰 สต๊อกอุปกรณ์ทั่วไป</button>
+<button class="btn" onclick="window.location.href='aluminium.html'">🪞 สต๊อกอลูมิเนียม</button>
+
+<div class="footer">© 2025 Komet ระบบสต๊อกภายในองค์กร</div>
 </body>
 </html>
