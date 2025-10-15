@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>โปรไฟล์ผู้ใช้</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Prompt:wght@400;600&display=swap');
+
+body {
+  font-family: "Prompt", sans-serif;
+  background: #f4f6f9;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  min-height: 100vh;
+  color: #333;
+}
+
+.container {
+  background: #fff;
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  text-align: center;
+  max-width: 400px;
+  width: 90%;
+}
+
+.profile-pic {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 20px;
+  border: 4px solid #1976d2;
+}
+
+h2 {
+  margin-bottom: 10px;
+  font-size: 24px;
+  color: #1976d2;
+}
+
+p {
+  margin: 5px 0;
+  font-size: 16px;
+  color: #555;
+}
+
+.btn {
+  margin-top: 20px;
+  padding: 12px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  background: #1976d2;
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.btn:hover {
+  background: #125aa0;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <img src="https://via.placeholder.com/120" alt="Profile Picture" class="profile-pic">
+  <h2>ชื่อผู้ใช้: ไฉน เปรมทอง</h2>
+  <p>อีเมล: user@example.com</p>
+  <p>สิทธิ์การใช้งาน: ผู้ดูแลระบบ</p>
+
+  <button class="btn" onclick="window.location.href='index.html'">🏠 กลับหน้าหลัก</button>
+</div>
+
+</body>
+</html>
