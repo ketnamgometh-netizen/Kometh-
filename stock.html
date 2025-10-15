@@ -32,6 +32,7 @@ input[type="text"], input[type="number"] { width:100%; text-align:center; }
 <h1>📦 ระบบสต๊อกอุปกรณ์ทั่วไป</h1>
 
 <div style="text-align:center;">
+  <button class="btn" onclick="window.location.href='index.html'">🏠 กลับหน้าหลัก</button>
   <button class="btn" id="start-scan">📸 สแกน QR</button>
   <button class="btn" id="addItemBtn">➕ เพิ่มอุปกรณ์</button>
   <button class="btn" id="export">📁 บันทึก Excel</button>
@@ -166,7 +167,7 @@ document.getElementById("printBtn").addEventListener("click", () => {
   document.getElementById("printArea").style.display="none";
 });
 
-// ==== QR Code Scanner ====
+// ==== QR Code Scanner พร้อมตรวจสอบซ้ำ ====
 const html5QrCode = new Html5Qrcode("reader");
 document.getElementById("start-scan").addEventListener("click", () => {
   document.getElementById("reader").style.display = "block";
@@ -177,19 +178,29 @@ document.getElementById("start-scan").addEventListener("click", () => {
         { fps: 10, qrbox: 250 },
         decodedText=>{
           const itemName = decodedText;
-          const inQty = prompt("จำนวนเข้า:", "0");
-          const outQty = prompt("จ่ายออก:", "0");
+          const existingIndex = items.findIndex(i => i.name === itemName);
           const date = new Date().toLocaleDateString("th-TH");
-          items.push({ date, name:itemName, inQty, outQty });
+
+          if(existingIndex >=0){
+            // ถ้าซ้ำ ให้แก้จำนวนเข้า / จ่ายออก
+            const inQty = prompt(`อุปกรณ์ ${itemName} ซ้ำ! จำนวนเข้าเดิม: ${items[existingIndex].inQty} เพิ่มเป็น:`, items[existingIndex].inQty);
+            const outQty = prompt(`จำนวนจ่ายออกเดิม: ${items[existingIndex].outQty} แก้เป็น:`, items[existingIndex].outQty);
+            items[existingIndex].inQty = inQty;
+            items[existingIndex].outQty = outQty;
+            items[existingIndex].date = date;
+          } else {
+            const inQty = prompt("จำนวนเข้า:", "0");
+            const outQty = prompt("จ่ายออก:", "0");
+            items.push({ date, name:itemName, inQty, outQty });
+          }
+
           saveItems();
           renderTable();
-          alert("เพิ่มอุปกรณ์จาก QR: "+itemName);
+          alert("บันทึกอุปกรณ์: "+itemName);
           html5QrCode.stop();
           document.getElementById("reader").style.display="none";
         },
-        errorMessage=>{
-          // console.log("Scan error:",errorMessage);
-        }
+        errorMessage=>{}
       );
     }
   }).catch(err=>alert("ไม่สามารถเปิดกล้องได้: "+err));
