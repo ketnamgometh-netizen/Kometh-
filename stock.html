@@ -8,25 +8,113 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Prompt&display=swap');
-body { font-family:"Prompt",sans-serif; background:#f4f6f9; margin:5px; }
-.container { max-width:100%; margin:auto; background:#fff; padding:15px; border-radius:12px; box-shadow:0 2px 10px rgba(0,0,0,0.1); }
-h1 { text-align:center; color:#333; font-size:22px; margin-bottom:10px; }
-
-.btn { padding:10px 12px; border:none; background:#1976d2; color:#fff; border-radius:50px; cursor:pointer; margin:3px; font-size:14px; display:inline-block; min-width:50px; }
+body {
+  font-family:"Prompt",sans-serif;
+  background:#f4f6f9;
+  margin:5px;
+}
+.container {
+  max-width:100%;
+  margin:auto;
+  background:#fff;
+  padding:15px;
+  border-radius:12px;
+  box-shadow:0 2px 10px rgba(0,0,0,0.1);
+}
+h1 {
+  text-align:center;
+  color:#333;
+  font-size:22px;
+  margin-bottom:10px;
+}
+.btn {
+  padding:10px 12px;
+  border:none;
+  background:#1976d2;
+  color:#fff;
+  border-radius:50px;
+  cursor:pointer;
+  margin:3px;
+  font-size:14px;
+  display:inline-block;
+  min-width:50px;
+}
 .btn:hover { background:#125aa0; }
 
-table { width:100%; border-collapse:collapse; margin-top:10px; font-size:14px; }
-th, td { border:1px solid #ccc; padding:6px; text-align:center; font-size:13px; }
-th { background:#1976d2; color:white; font-size:14px; }
-
-input[type="text"], input[type="number"], select {
-  width:100%; text-align:center; font-size:13px; padding:3px; box-sizing:border-box;
+.table-wrapper {
+  overflow-x:auto;
+  margin-top:10px;
 }
 
+table {
+  width:100%;
+  border-collapse:collapse;
+  font-size:14px;
+}
+th, td {
+  border:1px solid #ccc;
+  padding:8px;
+  text-align:center;
+  font-size:13px;
+}
+th {
+  background:#1976d2;
+  color:white;
+  font-size:14px;
+}
+input[type="text"], input[type="number"], select {
+  width:100%;
+  text-align:center;
+  font-size:13px;
+  padding:3px;
+  box-sizing:border-box;
+}
 .low { background:#ffcccc; }
 #reader { width:100%; margin:10px auto; display:none; }
+
+/* ✅ Responsive Table สำหรับมือถือ */
+@media (max-width: 768px) {
+  table, thead, tbody, th, td, tr {
+    display: block;
+  }
+  thead tr {
+    display: none;
+  }
+  tbody tr {
+    margin-bottom: 15px;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 10px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+  }
+  td {
+    text-align: left;
+    border: none;
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 10px;
+    font-size: 14px;
+  }
+  td::before {
+    content: attr(data-label);
+    font-weight: bold;
+    color: #1976d2;
+  }
+}
+
+/* ปุ่มมือถือ */
+@media (max-width: 600px) {
+  .btn {
+    display:block;
+    width:100%;
+    margin:6px 0;
+    font-size:15px;
+  }
+}
 
 @media print {
   body * { visibility:hidden; }
@@ -53,6 +141,7 @@ input[type="text"], input[type="number"], select {
 
 <div id="reader"></div>
 
+<div class="table-wrapper">
 <table id="stockTable">
   <thead>
     <tr>
@@ -69,6 +158,7 @@ input[type="text"], input[type="number"], select {
   </thead>
   <tbody></tbody>
 </table>
+</div>
 </div>
 
 <div id="printArea" style="display:none;">
@@ -111,15 +201,15 @@ function renderTable(){
     let unitOptions = units.map(u=>`<option value="${u}" ${u===item.unit?'selected':''}>${u}</option>`).join("");
 
     row.innerHTML=`
-      <td>${index+1}</td>
-      <td>${item.date}</td>
-      <td><input type="text" value="${item.name}" onchange="updateItem(${index},'name',this.value)"></td>
-      <td><input type="number" value="${item.inQty}" onchange="updateItem(${index},'inQty',this.value)"></td>
-      <td><input type="number" value="${item.outQty}" onchange="updateItem(${index},'outQty',this.value)"></td>
-      <td>${remain}</td>
-      <td><select onchange="updateItem(${index},'unit',this.value)">${unitOptions}</select></td>
-      <td>${order}</td>
-      <td><button class="btn" style="background:#e53935" onclick="deleteItem(${index})">❌</button></td>
+      <td data-label="ลำดับ">${index+1}</td>
+      <td data-label="วันที่">${item.date}</td>
+      <td data-label="ชื่ออุปกรณ์"><input type="text" value="${item.name}" onchange="updateItem(${index},'name',this.value)"></td>
+      <td data-label="จำนวนเข้า"><input type="number" value="${item.inQty}" onchange="updateItem(${index},'inQty',this.value)"></td>
+      <td data-label="จ่ายออก"><input type="number" value="${item.outQty}" onchange="updateItem(${index},'outQty',this.value)"></td>
+      <td data-label="คงเหลือ">${remain}</td>
+      <td data-label="หน่วย"><select onchange="updateItem(${index},'unit',this.value)">${unitOptions}</select></td>
+      <td data-label="สั่งเพิ่ม">${order}</td>
+      <td data-label="จัดการ"><button class="btn" style="background:#e53935" onclick="deleteItem(${index})">❌</button></td>
     `;
     tbody.appendChild(row);
   });
@@ -191,7 +281,6 @@ document.getElementById("pdfBtn").addEventListener("click",()=>{
 const html5QrCode = new Html5Qrcode("reader");
 document.getElementById("start-scan").addEventListener("click", async ()=>{
   document.getElementById("reader").style.display="block";
-
   try {
     const cameras = await Html5Qrcode.getCameras();
     if(!cameras.length) throw "ไม่พบกล้อง";
