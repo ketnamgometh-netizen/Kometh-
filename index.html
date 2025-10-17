@@ -20,6 +20,7 @@ body {
   justify-content: center;
   color: #1976d2;
   overflow: hidden;
+  -webkit-tap-highlight-color: transparent;
 }
 
 @keyframes gradientMove {
@@ -28,18 +29,22 @@ body {
   100% { background-position: 0% 50%; }
 }
 
-/* --- ปุ่มและกล่อง Neumorphism --- */
+/* Neumorphism base */
 .neu, .btn, .search-box, .icon-btn {
   background: #e6f0ff;
   border-radius: 25px;
   border: none;
-  box-shadow: 8px 8px 16px #b0c4de, -8px -8px 16px #ffffff;
-  transition: all 0.3s ease;
+  box-shadow: 6px 6px 12px #b0c4de, -6px -6px 12px #ffffff;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 
-.neu:hover, .btn:hover, .icon-btn:hover, .search-box:hover {
-  box-shadow: inset 4px 4px 8px #b0c4de, inset -4px -4px 8px #ffffff;
-  transform: translateY(2px);
+.neu:active, .btn:active, .icon-btn:active, .search-box button:active {
+  transform: scale(0.97);
+  box-shadow: inset 3px 3px 6px #b0c4de, inset -3px -3px 6px #ffffff;
 }
 
 /* --- แถบค้นหา --- */
@@ -47,10 +52,11 @@ body {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 10px 20px;
+  padding: 10px 18px;
   width: 90%;
   max-width: 400px;
   margin-top: 30px;
+  height: 48px;
 }
 
 .search-box input {
@@ -60,6 +66,7 @@ body {
   outline: none;
   font-size: 16px;
   color: #1976d2;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .search-box input::placeholder {
@@ -70,32 +77,29 @@ body {
   background: #e6f0ff;
   color: #1976d2;
   border-radius: 15px;
-  padding: 8px 14px;
+  padding: 10px 16px;
   cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 6px 6px 12px #b0c4de, -6px -6px 12px #ffffff;
-}
-
-.search-box button:hover {
-  box-shadow: inset 3px 3px 6px #b0c4de, inset -3px -3px 6px #ffffff;
+  transition: all 0.2s ease;
+  font-weight: 600;
+  min-height: 44px;
+  box-shadow: 5px 5px 10px #b0c4de, -5px -5px 10px #ffffff;
 }
 
 /* --- ปุ่มหลัก --- */
 .btn {
   display: block;
   width: 280px;
-  margin: 20px auto;
+  margin: 18px auto;
   padding: 18px;
   font-size: 20px;
   font-weight: 600;
   color: #1976d2;
-  cursor: pointer;
   text-align: center;
+  min-height: 50px;
 }
 
 .btn:hover {
-  color: #1976d2;
-  transform: translateY(2px);
+  transform: translateY(1px);
 }
 
 /* --- หัวข้อหลัก --- */
@@ -116,21 +120,22 @@ h1 {
   position: absolute;
   top: 20px;
   left: 20px;
-  width: 50px;
-  height: 50px;
+  width: 55px;
+  height: 55px;
   border-radius: 50%;
   color: #1976d2;
   font-size: 24px;
   display: flex;
   justify-content: center;
   align-items: center;
-  cursor: pointer;
+  min-height: 44px;
+  z-index: 10;
 }
 
 .icon-btn[data-tooltip]:hover::after {
   content: attr(data-tooltip);
   position: absolute;
-  top: 60px;
+  top: 65px;
   left: 50%;
   transform: translateX(-50%);
   background: rgba(0,0,0,0.75);
@@ -138,7 +143,7 @@ h1 {
   padding: 6px 10px;
   border-radius: 6px;
   white-space: nowrap;
-  font-size: 14px;
+  font-size: 13px;
   pointer-events: none;
 }
 
@@ -149,6 +154,7 @@ h1 {
   filter: blur(60px);
   opacity: 0.5;
   animation: float 10s ease-in-out infinite;
+  pointer-events: none;
 }
 .circle1 { width: 200px; height: 200px; background: #ffffff33; top: 10%; left: 15%; animation-delay: 0s; }
 .circle2 { width: 300px; height: 300px; background: #90caf966; bottom: 10%; right: 10%; animation-delay: 3s; }
@@ -161,14 +167,17 @@ h1 {
   font-size: 14px;
   color: white;
   opacity: 0.9;
+  text-align: center;
+  width: 100%;
+  user-select: none;
 }
 
 /* --- Responsive --- */
 @media (max-width: 768px) {
   h1 { font-size: 28px; }
-  .btn { width: 80%; font-size: 18px; padding: 15px; }
-  .icon-btn { width: 45px; height: 45px; font-size: 20px; top: 15px; left: 15px; }
-  .search-box { max-width: 90%; }
+  .btn { width: 85%; font-size: 18px; padding: 16px; }
+  .icon-btn { width: 50px; height: 50px; font-size: 22px; top: 15px; left: 15px; }
+  .search-box { max-width: 92%; height: 46px; }
 }
 </style>
 </head>
@@ -194,8 +203,7 @@ h1 {
 <button class="btn" onclick="window.location.href='stock.html'">🧰 สต๊อกอุปกรณ์ทั่วไป</button>
 <button class="btn" onclick="window.location.href='aluminium.html'">🪞 สต๊อกอลูมิเนียม</button>
 
-<div class="footer">© 2025 Komet ระบบสต๊อกภายในองค์กร Ui 00.2</div>
+<div class="footer">© 2025 Komet ระบบสต๊อกภายในองค์กร UI 00.3</div>
 
 </body>
 </html>
-   
