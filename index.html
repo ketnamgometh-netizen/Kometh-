@@ -6,19 +6,19 @@
 <title>เมนูหลัก - ระบบสต๊อก</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@400;600&display=swap');
+
 body {
   font-family: "Prompt", sans-serif;
-  background: linear-gradient(-45deg, #1976d2, #42a5f5, #64b5f6, #90caf9);
+  background: linear-gradient(-45deg, #90caf9, #64b5f6, #42a5f5, #1976d2);
   background-size: 400% 400%;
   animation: gradientMove 10s ease infinite;
   height: 100vh;
   margin: 0;
   display: flex;
-  justify-content: center;
-  align-items: center;
   flex-direction: column;
-  color: white;
-  text-align: center;
+  align-items: center;
+  justify-content: center;
+  color: #1976d2;
   overflow: hidden;
 }
 
@@ -28,10 +28,81 @@ body {
   100% { background-position: 0% 50%; }
 }
 
+/* --- ปุ่มและกล่อง Neumorphism --- */
+.neu, .btn, .search-box, .icon-btn {
+  background: #e6f0ff;
+  border-radius: 25px;
+  border: none;
+  box-shadow: 8px 8px 16px #b0c4de, -8px -8px 16px #ffffff;
+  transition: all 0.3s ease;
+}
+
+.neu:hover, .btn:hover, .icon-btn:hover, .search-box:hover {
+  box-shadow: inset 4px 4px 8px #b0c4de, inset -4px -4px 8px #ffffff;
+  transform: translateY(2px);
+}
+
+/* --- แถบค้นหา --- */
+.search-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 20px;
+  width: 90%;
+  max-width: 400px;
+  margin-top: 30px;
+}
+
+.search-box input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  outline: none;
+  font-size: 16px;
+  color: #1976d2;
+}
+
+.search-box input::placeholder {
+  color: #90a4ae;
+}
+
+.search-box button {
+  background: #e6f0ff;
+  color: #1976d2;
+  border-radius: 15px;
+  padding: 8px 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 6px 6px 12px #b0c4de, -6px -6px 12px #ffffff;
+}
+
+.search-box button:hover {
+  box-shadow: inset 3px 3px 6px #b0c4de, inset -3px -3px 6px #ffffff;
+}
+
+/* --- ปุ่มหลัก --- */
+.btn {
+  display: block;
+  width: 280px;
+  margin: 20px auto;
+  padding: 18px;
+  font-size: 20px;
+  font-weight: 600;
+  color: #1976d2;
+  cursor: pointer;
+  text-align: center;
+}
+
+.btn:hover {
+  color: #1976d2;
+  transform: translateY(2px);
+}
+
+/* --- หัวข้อหลัก --- */
 h1 {
-  font-size: 40px;
-  margin-bottom: 40px;
-  text-shadow: 2px 2px 5px rgba(0,0,0,0.25);
+  font-size: 36px;
+  text-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+  margin-bottom: 10px;
   animation: fadeInDown 1s ease;
 }
 
@@ -40,61 +111,7 @@ h1 {
   to { opacity: 1; transform: translateY(0); }
 }
 
-.btn {
-  display: block;
-  width: 280px;
-  margin: 15px auto;
-  padding: 18px;
-  font-size: 20px;
-  font-weight: 600;
-  border: none;
-  border-radius: 12px;
-  background: white;
-  color: #1976d2;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 6px 15px rgba(0,0,0,0.2);
-  animation: fadeInUp 1.5s ease;
-}
-
-.btn:hover {
-  transform: translateY(-4px);
-  background: #1976d2;
-  color: #fff;
-  box-shadow: 0 10px 20px rgba(25,118,210,0.4);
-}
-
-@keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.footer {
-  position: absolute;
-  bottom: 15px;
-  font-size: 14px;
-  opacity: 0.8;
-  animation: fadeIn 2s ease;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-/* วงกลมเบลอพื้นหลัง */
-.bg-circle {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(60px);
-  opacity: 0.5;
-  animation: float 10s ease-in-out infinite;
-}
-.circle1 { width: 200px; height: 200px; background: #ffffff33; top: 10%; left: 15%; animation-delay: 0s; }
-.circle2 { width: 300px; height: 300px; background: #90caf966; bottom: 10%; right: 10%; animation-delay: 3s; }
-@keyframes float { 0%,100% { transform: translateY(0) translateX(0); } 50% { transform: translateY(-20px) translateX(15px); } }
-
-/* ปุ่มมุมซ้ายบน แบบไอคอนวงกลม + tooltip */
+/* --- ปุ่มมุมซ้ายบน --- */
 .icon-btn {
   position: absolute;
   top: 20px;
@@ -102,23 +119,12 @@ h1 {
   width: 50px;
   height: 50px;
   border-radius: 50%;
-  background: white;
   color: #1976d2;
-  border: none;
-  cursor: pointer;
   font-size: 24px;
   display: flex;
   justify-content: center;
   align-items: center;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-  transition: all 0.3s ease;
-}
-
-.icon-btn:hover {
-  background: #1976d2;
-  color: white;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 15px rgba(25,118,210,0.4);
+  cursor: pointer;
 }
 
 .icon-btn[data-tooltip]:hover::after {
@@ -134,32 +140,61 @@ h1 {
   white-space: nowrap;
   font-size: 14px;
   pointer-events: none;
-  z-index: 10;
 }
 
-/* responsive */
+/* --- วงกลมเบลอพื้นหลัง --- */
+.bg-circle {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(60px);
+  opacity: 0.5;
+  animation: float 10s ease-in-out infinite;
+}
+.circle1 { width: 200px; height: 200px; background: #ffffff33; top: 10%; left: 15%; animation-delay: 0s; }
+.circle2 { width: 300px; height: 300px; background: #90caf966; bottom: 10%; right: 10%; animation-delay: 3s; }
+@keyframes float { 0%,100% { transform: translateY(0) translateX(0); } 50% { transform: translateY(-20px) translateX(15px); } }
+
+/* --- ลิขสิทธิ์ด้านล่าง --- */
+.footer {
+  position: absolute;
+  bottom: 15px;
+  font-size: 14px;
+  color: white;
+  opacity: 0.9;
+}
+
+/* --- Responsive --- */
 @media (max-width: 768px) {
-  h1 { font-size: 30px; }
+  h1 { font-size: 28px; }
   .btn { width: 80%; font-size: 18px; padding: 15px; }
   .icon-btn { width: 45px; height: 45px; font-size: 20px; top: 15px; left: 15px; }
+  .search-box { max-width: 90%; }
 }
 </style>
 </head>
 <body>
+
 <!-- วงกลมเบลอพื้นหลัง -->
 <div class="bg-circle circle1"></div>
 <div class="bg-circle circle2"></div>
 
-<!-- ปุ่มไอคอนมุมซ้ายบน -->
-<button class="icon-btn" onclick="window.location.href='search.html'" data-tooltip="ค้นหา / กรอง">🔍</button>
-<button class="icon-btn" onclick="window.location.href='profile.html'" style="top:80px;" data-tooltip="หน้าโปรไฟล์">👤</button>
+<!-- ปุ่มมุมซ้ายบน -->
+<button class="icon-btn" onclick="window.location.href='profile.html'" data-tooltip="โปรไฟล์ผู้ใช้">👤</button>
 
+<!-- หัวข้อ -->
 <h1>📦 ระบบจัดการสต๊อก</h1>
 
-<!-- ปุ่มสต๊อกตรงกลาง -->
+<!-- แถบค้นหา -->
+<div class="search-box">
+  <input type="text" placeholder="🔍 ค้นหารายการสต๊อก...">
+  <button>ค้นหา</button>
+</div>
+
+<!-- ปุ่มสต๊อก -->
 <button class="btn" onclick="window.location.href='stock.html'">🧰 สต๊อกอุปกรณ์ทั่วไป</button>
 <button class="btn" onclick="window.location.href='aluminium.html'">🪞 สต๊อกอลูมิเนียม</button>
 
-<div class="footer">© 2025 Komet ระบบสต๊อกภายในองค์กร UI 00.1</div>
+<div class="footer">© 2025 Komet ระบบสต๊อกภายในองค์กร Ui 00.2</div>
+
 </body>
 </html>
