@@ -69,7 +69,9 @@ input[type="text"], input[type="number"], select {
   width:100%;
   text-align:center;
   font-size:13px;
-  padding:3px;
+  padding:6px;
+  border:1px solid #ccc;
+  border-radius:6px;
   box-sizing:border-box;
 }
 .low { background:#ffcccc; }
@@ -87,22 +89,37 @@ input[type="text"], input[type="number"], select {
     margin-bottom: 15px;
     background: #fff;
     border: 1px solid #ddd;
-    border-radius: 10px;
-    padding: 10px;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+    border-radius: 12px;
+    padding: 10px 14px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
   }
   td {
     text-align: left;
     border: none;
     display: flex;
     justify-content: space-between;
-    padding: 6px 10px;
-    font-size: 14px;
+    align-items: center;
+    padding: 8px 0;
+    font-size: 15px;
+    border-bottom: 1px solid #eee;
+  }
+  td:last-child {
+    border-bottom: none;
   }
   td::before {
     content: attr(data-label);
-    font-weight: bold;
+    font-weight: 600;
     color: #1976d2;
+    flex: 1;
+    min-width: 120px;
+  }
+  td input, td select {
+    flex: 1.2;
+    text-align: center;
+    padding: 6px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    max-width: 160px;
   }
 }
 
@@ -263,17 +280,70 @@ document.getElementById("printBtn").addEventListener("click",()=>{
   document.getElementById("printArea").style.display="none";
 });
 
-// PDF
-document.getElementById("pdfBtn").addEventListener("click",()=>{
-  const printArea = document.getElementById("stockTable");
-  html2canvas(printArea).then(canvas=>{
-    const imgData = canvas.toDataURL('image/png');
-    const pdf = new jspdf.jsPDF('p','mm','a4');
-    const imgProps = pdf.getImageProperties(imgData);
-    const pdfWidth = pdf.internal.pageSize.getWidth();
-    const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-    pdf.addImage(imgData,'PNG',0,0,pdfWidth,pdfHeight);
-    pdf.save("stock_items.pdf");
+// ✅ PDF สวยและเรียงตรงทุกคอลัมน์
+document.getElementById("pdfBtn").addEventListener("click", ()=>{
+  import("https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js").then(({ jsPDF })=>{
+    import("https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js").then(()=>{
+      const doc = new jsPDF('p', 'mm', 'a4');
+      doc.setFont("THSarabun", "normal");
+      doc.setFontSize(16);
+      doc.text("รายงานสต๊อกอุปกรณ์", 105, 15, {align:"center"});
+      doc.setFontSize(12);
+
+      // สร้างหัวตาราง
+      const headers = [["ลำดับ","วันที่","ชื่ออุปกรณ์","จำนวนเข้า","จ่ายออก","คงเหลือ","หน่วย","สั่งเพิ่ม"]];
+
+      // แปลงข้อมูลทั้งหมด
+      const body = items.map((item, index) => {
+        const inQty = parseInt(item.inQty) || 0;
+        const outQty = parseInt(item.outQty) || 0;
+        const remain = inQty - outQty;
+        const order = remain <= 10 ? "ต้องสั่งเพิ่ม" : "";
+        return [
+          index + 1,
+          item.date,
+          item.name,
+          inQty,
+          outQty,
+          remain,
+          item.unit || "",
+          order
+        ];
+      });
+
+      // ใช้ autoTable เพื่อจัดรูปแบบ PDF
+      doc.autoTable({
+        head: headers,
+        body: body,
+        startY: 25,
+        styles: {
+          fontSize: 11,
+          halign: "center",
+          valign: "middle",
+          cellPadding: 2,
+          lineColor: [200, 200, 200],
+          lineWidth: 0.2
+        },
+        headStyles: {
+          fillColor: [25, 118, 210],
+          textColor: 255,
+          fontStyle: 'bold'
+        },
+        alternateRowStyles: { fillColor: [245, 245, 245] },
+        columnStyles: {
+          2: { halign: "left", cellWidth: 40 },
+          3: { cellWidth: 18 },
+          4: { cellWidth: 18 },
+          5: { cellWidth: 18 },
+          6: { cellWidth: 18 },
+          7: { cellWidth: 25 }
+        },
+        margin: { left: 10, right: 10 }
+      });
+
+      // บันทึกไฟล์
+      doc.save("stock_items.pdf");
+    });
   });
 });
 
