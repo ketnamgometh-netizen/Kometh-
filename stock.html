@@ -3,12 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ระบบสต๊อกอุปกรณ์ (มือถือ)</title>
+<title>ระบบสต๊อกอุปกรณ์</title>
 <script src="https://unpkg.com/html5-qrcode"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Prompt&display=swap');
-
 body { font-family:"Prompt",sans-serif; background:#f4f6f9; margin:5px; }
 .container { max-width:100%; margin:auto; background:#fff; padding:15px; border-radius:12px; box-shadow:0 2px 10px rgba(0,0,0,0.1); }
 h1 { text-align:center; color:#333; font-size:22px; margin-bottom:10px; }
@@ -25,7 +26,6 @@ input[type="text"], input[type="number"], select {
 }
 
 .low { background:#ffcccc; }
-
 #reader { width:100%; margin:10px auto; display:none; }
 
 @media print {
@@ -38,15 +38,17 @@ input[type="text"], input[type="number"], select {
 
 <body>
 <div class="container">
-<h1>📦 ระบบสต๊อกอุปกรณ์มือถือ</h1>
+<h1>📦 ระบบสต๊อกอุปกรณ์</h1>
 
 <div style="text-align:center;">
-  <button class="btn" onclick="window.location.href='index.html'">🏠</button>
-  <button class="btn" id="start-scan">📸</button>
-  <button class="btn" id="addItemBtn">➕</button>
-  <button class="btn" id="saveBtn">💾</button>
-  <button class="btn" id="export">📁</button>
-  <button class="btn" id="printBtn">🖨️</button>
+  <button class="btn" onclick="window.location.href='index.html'">🏠 หน้าหลัก</button>
+  <button class="btn" id="start-scan">สแกน📸</button>
+  <button class="btn" id="addItemBtn">เพิ่ม➕</button>
+  <button class="btn" id="saveBtn">บันทึก💾</button>
+  <button class="btn" id="clearBtn" style="background:#e53935;">ล้างข้อมูล🧹</button>
+  <button class="btn" id="export">Excel📁</button>
+  <button class="btn" id="pdfBtn">PDF📄</button>
+  <button class="btn" id="printBtn">พิมพ์🖨️</button>
 </div>
 
 <div id="reader"></div>
@@ -92,13 +94,11 @@ input[type="text"], input[type="number"], select {
 let items = JSON.parse(localStorage.getItem("stockItems")) || [];
 const units = ["ลัง","ม้วน","กล่อง","ดอก","ใบ","ตัว","อัน","กระบอก","ถุง"];
 
-function saveItems() {
-  localStorage.setItem("stockItems", JSON.stringify(items));
-}
+function saveItems(){ localStorage.setItem("stockItems", JSON.stringify(items)); }
 
-function renderTable() {
+function renderTable(){
   const tbody = document.querySelector("#stockTable tbody");
-  tbody.innerHTML = "";
+  tbody.innerHTML="";
   items.forEach((item,index)=>{
     const inQty = parseInt(item.inQty)||0;
     const outQty = parseInt(item.outQty)||0;
@@ -106,7 +106,7 @@ function renderTable() {
     const order = remain<=10?"ต้องสั่งเพิ่ม":"";
     const rowClass = remain<=10?"low":"";
     const row = document.createElement("tr");
-    row.className = rowClass;
+    row.className=rowClass;
 
     let unitOptions = units.map(u=>`<option value="${u}" ${u===item.unit?'selected':''}>${u}</option>`).join("");
 
@@ -127,7 +127,7 @@ function renderTable() {
 
 function updateItem(i,key,value){ items[i][key]=value; saveItems(); renderTable(); }
 function addItem(){
-  const name = prompt("ชื่ออุปกรณ์:"); if(!name) return;
+  const name = prompt("ชื่ออุปกรณ์:"); if(!name)return;
   const inQty = prompt("จำนวนเข้า:","0");
   const outQty = prompt("จ่ายออก:","0");
   const unit = prompt(`เลือกหน่วย: ${units.join(",")}`,units[0]);
@@ -138,8 +138,16 @@ function addItem(){
 function deleteItem(i){ if(confirm("ลบรายการนี้หรือไม่?")){ items.splice(i,1); saveItems(); renderTable(); } }
 
 document.getElementById("addItemBtn").addEventListener("click",addItem);
-document.getElementById("saveBtn").addEventListener("click",()=>{ saveItems(); alert("บันทึกเรียบร้อย!"); });
+document.getElementById("saveBtn").addEventListener("click",()=>{ saveItems(); alert("✅ บันทึกเรียบร้อย!"); });
+document.getElementById("clearBtn").addEventListener("click",()=>{
+  if(confirm("แน่ใจว่าต้องการล้างข้อมูลทั้งหมด?")){
+    items = [];
+    saveItems();
+    renderTable();
+  }
+});
 
+// Export Excel
 document.getElementById("export").addEventListener("click",()=>{
   const ws=XLSX.utils.table_to_sheet(document.getElementById("stockTable"));
   const wb=XLSX.utils.book_new();
@@ -147,6 +155,7 @@ document.getElementById("export").addEventListener("click",()=>{
   XLSX.writeFile(wb,"stock_items.xlsx");
 });
 
+// Print
 document.getElementById("printBtn").addEventListener("click",()=>{
   const printTbody=document.getElementById("printTable");
   printTbody.innerHTML="";
@@ -164,40 +173,55 @@ document.getElementById("printBtn").addEventListener("click",()=>{
   document.getElementById("printArea").style.display="none";
 });
 
-// QR Scanner
-const html5QrCode=new Html5Qrcode("reader");
-document.getElementById("start-scan").addEventListener("click",()=>{
+// PDF
+document.getElementById("pdfBtn").addEventListener("click",()=>{
+  const printArea = document.getElementById("stockTable");
+  html2canvas(printArea).then(canvas=>{
+    const imgData = canvas.toDataURL('image/png');
+    const pdf = new jspdf.jsPDF('p','mm','a4');
+    const imgProps = pdf.getImageProperties(imgData);
+    const pdfWidth = pdf.internal.pageSize.getWidth();
+    const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+    pdf.addImage(imgData,'PNG',0,0,pdfWidth,pdfHeight);
+    pdf.save("stock_items.pdf");
+  });
+});
+
+// สแกน QR (เฉพาะกล้องหลัง)
+const html5QrCode = new Html5Qrcode("reader");
+document.getElementById("start-scan").addEventListener("click", async ()=>{
   document.getElementById("reader").style.display="block";
-  Html5Qrcode.getCameras().then(cameras=>{
-    if(cameras && cameras.length){
-      html5QrCode.start(
-        cameras[0].id,
-        { fps:10, qrbox:250 },
-        decodedText=>{
-          const itemName = decodedText;
-          const existingIndex = items.findIndex(i=>i.name===itemName);
-          const date = new Date().toLocaleDateString("th-TH");
 
-          if(existingIndex>=0){
-            const inQty = prompt(`อุปกรณ์ ${itemName} ซ้ำ! จำนวนเข้าเดิม: ${items[existingIndex].inQty} เพิ่มเป็น:`, items[existingIndex].inQty);
-            const outQty = prompt(`จำนวนจ่ายออกเดิม: ${items[existingIndex].outQty} แก้เป็น:`, items[existingIndex].outQty);
-            const unit = prompt(`เลือกหน่วย: ${units.join(",")}`, items[existingIndex].unit||units[0]);
-            items[existingIndex].inQty=inQty; items[existingIndex].outQty=outQty; items[existingIndex].unit=unit; items[existingIndex].date=date;
-          }else{
-            const inQty=prompt("จำนวนเข้า:","0");
-            const outQty=prompt("จ่ายออก:","0");
-            const unit=prompt(`เลือกหน่วย: ${units.join(",")}`,units[0]);
-            items.push({date,name:itemName,inQty,outQty,unit});
-          }
-
-          saveItems(); renderTable();
-          alert("บันทึกอุปกรณ์: "+itemName);
-          html5QrCode.stop(); document.getElementById("reader").style.display="none";
-        },
-        errorMessage=>{}
-      );
-    }
-  }).catch(err=>alert("ไม่สามารถเปิดกล้องได้: "+err));
+  try {
+    const cameras = await Html5Qrcode.getCameras();
+    if(!cameras.length) throw "ไม่พบกล้อง";
+    const backCam = cameras.find(c=>/back|rear|หลัง/i.test(c.label)) || cameras[cameras.length-1];
+    await html5QrCode.start(
+      {deviceId:{exact:backCam.id}},
+      {fps:10, qrbox:250},
+      decodedText=>{
+        const itemName = decodedText.trim();
+        const date = new Date().toLocaleDateString("th-TH");
+        const existingIndex = items.findIndex(i=>i.name===itemName);
+        if(existingIndex>=0){
+          const inQty = prompt(`อุปกรณ์ ${itemName} มีอยู่แล้ว\nจำนวนเข้าเดิม: ${items[existingIndex].inQty}\nเพิ่มเป็น:`, items[existingIndex].inQty);
+          const outQty = prompt(`จำนวนจ่ายออกเดิม: ${items[existingIndex].outQty}\nแก้เป็น:`, items[existingIndex].outQty);
+          const unit = prompt(`เลือกหน่วย: ${units.join(",")}`, items[existingIndex].unit||units[0]);
+          items[existingIndex] = {date,name:itemName,inQty,outQty,unit};
+        }else{
+          const inQty = prompt("จำนวนเข้า:","0");
+          const outQty = prompt("จ่ายออก:","0");
+          const unit = prompt(`เลือกหน่วย: ${units.join(",")}`,units[0]);
+          items.push({date,name:itemName,inQty,outQty,unit});
+        }
+        saveItems(); renderTable();
+        alert("✅ บันทึกอุปกรณ์: "+itemName);
+        html5QrCode.stop(); document.getElementById("reader").style.display="none";
+      }
+    );
+  } catch(err){
+    alert("⚠️ ไม่สามารถเปิดกล้องได้: "+err);
+  }
 });
 
 renderTable();
